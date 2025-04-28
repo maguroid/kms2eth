@@ -1,0 +1,19 @@
+{
+  "name": "kms2eth",
+  "version": "0.1.0",
+  "description": "Convert KMS keys to Ethereum addresses",
+  "license": "MIT",
+  "repository": "github:maguroid/kms2eth",
+  "type": "module",
+  "bin": {
+    "kms2eth": "dist/index.js"
+  },
+  "scripts": {
+    "build": "bun build src/index.ts --outfile dist/index.js",
+    "compile": "bun build src/index.ts --compile --outfile kms2eth"
+  },
+  "dependencies": {
+    "@aws-sdk/client-sts": "^3.797.0",
+    "@aws-sdk/credential-provider-node": "^3.797.0"
+  }
+}
