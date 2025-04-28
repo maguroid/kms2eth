@@ -7,6 +7,7 @@
 import { Command } from "commander";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
+import process from "node:process";
 import {
   KMSClient,
   GetPublicKeyCommand,
@@ -47,8 +48,8 @@ const credentials = defaultProvider({ profile: opt.profile });
  * Returns the path to the cache file.
  */
 function cachePath() {
-  const home = Bun.env.HOME || Bun.env.USERPROFILE!;
-  const base = Bun.env.XDG_CACHE_HOME ?? `${home}/.cache`;
+  const home = process.env.HOME || process.env.USERPROFILE!;
+  const base = process.env.XDG_CACHE_HOME ?? `${home}/.cache`;
   return `${base}/kms2eth/cache.json`;
 }
 

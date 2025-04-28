@@ -11,9 +11,6 @@
 - ⛓ **Chain‑agnostic hashing** – works for mainnet, testnets, L2s… anything that uses secp256k1.
 - 🪪 **AWS profile & region aware** – switch credentials via `--profile`/`AWS_PROFILE` & `--region`.
 - ⚡️ **Smart local cache** – results cached in `~/.cache/kms2eth/cache.json`.
-- ❌ **Clear exit codes** – distinct non‑zero codes for NotFound/Disabled/service errors.
-- 🛠 **Zero external deps** – uses official AWS SDK v3 + `@noble/hashes` only.
-- 🧪 **Strictly typed** – built with TypeScript.
 
 ---
 
@@ -24,7 +21,7 @@
 bun install -g kms2eth
 
 # Or clone & run locally
-git clone https://github.com/<your-org>/kms2eth && cd kms2eth
+git clone https://github.com/maguroid/kms2eth && cd kms2eth
 bun install
 bun kms2eth --help
 ```
