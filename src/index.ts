@@ -17,7 +17,7 @@ import {
 } from "@aws-sdk/client-kms";
 import { STSClient, GetCallerIdentityCommand } from "@aws-sdk/client-sts";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
-import { keccak_256 } from "@noble/hashes/sha3";
+import { keccak256, toChecksum } from "./checksum";
 
 /* ------------ CLI & ENV ------------ */
 const cli = new Command()
@@ -111,7 +111,7 @@ if (!addrHex) {
   // Drop the 0x04 prefix to get X and Y coordinates
   const pubXY = uncompressed.slice(1);
   // Hash the public key using Keccak-256
-  const hash = keccak_256(pubXY);
+  const hash = keccak256(pubXY);
   // Take the last 20 bytes as the Ethereum address
   addrHex = Array.from(hash.slice(-20))
     .map((b) => b.toString(16).padStart(2, "0"))
@@ -149,20 +149,6 @@ function handleKmsError(
   }
   console.error(`❌  unknown error: ${error}`);
   process.exit(5);
-}
-
-/* ------------ Checksum & output ------------ */
-/**
- * Applies EIP-55 checksum to a hex string.
- */
-function toChecksum(hex: string) {
-  const h = keccak_256(hex).reduce(
-    (s, b) => s + b.toString(16).padStart(2, "0"),
-    ""
-  );
-  return [...hex]
-    .map((c, i) => (parseInt(h[i], 16) > 7 ? c.toUpperCase() : c))
-    .join("");
 }
 
 const outHex = opt.checksum ? toChecksum(addrHex) : addrHex.toLowerCase();
