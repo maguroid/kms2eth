@@ -114,6 +114,40 @@ Delete the file to force a fresh lookup.
 
 ---
 
+## Development
+
+This project uses Bun for package management and scripting.
+
+### Setup
+
+1.  Install dependencies:
+    ```bash
+    bun install
+    ```
+    This will also install the development tools listed below.
+
+### Available Scripts
+
+The following scripts are available for development:
+
+*   **Linting & Formatting:**
+    *   `bun run lint`: Check for code style issues and potential errors using ESLint.
+    *   `bun run lint:fix`: Automatically fix fixable linting issues.
+    *   `bun run format`: Format all code using Prettier.
+*   **Testing:**
+    *   `bun run test`: Run the unit test suite using `bun test`.
+*   **Building:**
+    *   `bun run build`: Build the project from `src/index.ts` into `dist/index.js`. This is useful for distribution or when you don't want to run directly from TypeScript sources.
+    *   `bun run compile`: Create a standalone executable named `kms2eth` in the project root.
+
+### Tools Used
+
+*   **ESLint:** For identifying and reporting on patterns in TypeScript code, ensuring code quality and consistency. Configured with `@typescript-eslint/eslint-plugin`.
+*   **Prettier:** An opinionated code formatter to ensure consistent code style across the project. Integrated with ESLint via `eslint-plugin-prettier` and `eslint-config-prettier`.
+*   **Bun Test:** Bun's built-in fast test runner, used for executing unit tests.
+
+---
+
 ## License
 
 MIT © 2025 [maguroid](https://github.com/maguroid)

@@ -1,27 +1,28 @@
 {
   "compilerOptions": {
     // Enable latest features
-    "lib": ["ESNext", "DOM"],
+    "lib": ["ESNext"], // Removed "DOM"
     "target": "ESNext",
     "module": "ESNext",
-    "moduleDetection": "force",
-    "jsx": "react-jsx",
+    // "moduleDetection": "force", // Optional, ESNext module should be sufficient
+    // "jsx": "react-jsx", // Likely not needed for a CLI tool
     "allowJs": true,
 
-    // Bundler mode
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "noEmit": true,
+    // Module resolution for Node.js
+    "moduleResolution": "node", // Changed from "bundler"
+    "allowImportingTsExtensions": true, // Keep if using .ts extensions in imports
+    "verbatimModuleSyntax": true, // Good for consistency
+    // "noEmit": false, // Allow 'bun build' to emit files; removing it defaults to false
 
     // Best practices
     "strict": true,
-    "skipLibCheck": true,
+    "skipLibCheck": true, // Good for faster type checking
     "noFallthroughCasesInSwitch": true,
 
-    // Some stricter flags (disabled by default)
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
+    // Some stricter flags
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "noPropertyAccessFromIndexSignature": false
+    // Add other options as needed, e.g., "outDir" if 'bun build' doesn't handle it
   }
 }
