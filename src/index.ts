@@ -53,9 +53,16 @@ function cachePath() {
   return `${base}/kms2eth/cache.json`;
 }
 
+const CACHE_TTL_MS = 6 * 60 * 60 * 1000;
+
+type CacheEntry = {
+  value: string; /* 40-byte hex */
+  expiresAt: number;
+};
+
 type Cache = Record<
   string /* accountId:region:keyId */,
-  string /* 40-byte hex */
+  CacheEntry
 >;
 
 /**
@@ -63,7 +70,29 @@ type Cache = Record<
  */
 function loadCache(): Cache {
   try {
-    return JSON.parse(readFileSync(cachePath(), "utf8")) as Cache;
+    const parsed = JSON.parse(readFileSync(cachePath(), "utf8")) as Record<
+      string,
+      unknown
+    >;
+    const now = Date.now();
+    const cache: Cache = {};
+    for (const [key, entry] of Object.entries(parsed)) {
+      if (
+        entry &&
+        typeof entry === "object" &&
+        typeof (entry as { value?: unknown }).value === "string" &&
+        typeof (entry as { expiresAt?: unknown }).expiresAt === "number"
+      ) {
+        const expiresAt = (entry as { expiresAt: number }).expiresAt;
+        if (Number.isFinite(expiresAt) && expiresAt > now) {
+          cache[key] = {
+            value: (entry as { value: string }).value,
+            expiresAt,
+          };
+        }
+      }
+    }
+    return cache;
   } catch {
     return {};
   }
@@ -88,8 +117,14 @@ const accountId = await (async () => {
 const cacheKey = `${accountId}:${opt.region}:${opt.keyId}`;
 const cache = loadCache();
 
-let addrHex = cache[cacheKey];
-if (!addrHex) {
+const cachedEntry = cache[cacheKey];
+let addrHex: string;
+if (cachedEntry && cachedEntry.expiresAt > Date.now()) {
+  addrHex = cachedEntry.value;
+} else {
+  if (cachedEntry) {
+    delete cache[cacheKey];
+  }
   const kms = new KMSClient({ region: opt.region, credentials });
 
   // Fetch the public key from AWS KMS
@@ -118,7 +153,10 @@ if (!addrHex) {
     .join("");
 
   // Save the result to cache
-  cache[cacheKey] = addrHex;
+  cache[cacheKey] = {
+    value: addrHex,
+    expiresAt: Date.now() + CACHE_TTL_MS,
+  };
   saveCache(cache);
 }
 
