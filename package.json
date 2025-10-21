@@ -12,7 +12,8 @@
   },
   "scripts": {
     "build": "bun build src/index.ts --outfile dist/index.js",
-    "compile": "bun build src/index.ts --compile --outfile kms2eth"
+    "compile": "bun build src/index.ts --compile --outfile kms2eth",
+    "test": "bun test"
   },
   "dependencies": {
     "@aws-sdk/client-kms": "^3.797.0",
